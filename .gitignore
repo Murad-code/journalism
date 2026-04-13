@@ -2,6 +2,9 @@ build
 dist / media
 node_modules
 .pnpm-store
+
+# TypeScript incremental cache
+*.tsbuildinfo
 .DS_Store
 .env
 .next

@@ -14,9 +14,6 @@ export const HeaderNav: React.FC<{ data: HeaderType }> = ({ data }) => {
       {navItems.map(({ link }, i) => {
         return <CMSLink key={i} {...link} appearance="link" />
       })}
-      <Link className="text-primary hover:underline" href="/articles">
-        Articles
-      </Link>
     </nav>
   )
 }

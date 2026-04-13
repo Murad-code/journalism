@@ -1,4 +1,4 @@
-import type { Post, ArchiveBlock as ArchiveBlockProps } from '@/payload-types'
+import type { Article, ArchiveBlock as ArchiveBlockProps } from '@/payload-types'
 
 import configPromise from '@payload-config'
 import { getPayload } from 'payload'
@@ -12,44 +12,30 @@ export const ArchiveBlock: React.FC<
     id?: string
   }
 > = async (props) => {
-  const { id, categories, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+  const { id, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
 
   const limit = limitFromProps || 3
 
-  let posts: Post[] = []
+  let articles: Article[] = []
 
   if (populateBy === 'collection') {
     const payload = await getPayload({ config: configPromise })
 
-    const flattenedCategories = categories?.map((category) => {
-      if (typeof category === 'object') return category.id
-      else return category
-    })
-
-    const fetchedPosts = await payload.find({
-      collection: 'posts',
+    const fetched = await payload.find({
+      collection: 'articles',
       depth: 1,
       limit,
-      ...(flattenedCategories && flattenedCategories.length > 0
-        ? {
-            where: {
-              categories: {
-                in: flattenedCategories,
-              },
-            },
-          }
-        : {}),
+      overrideAccess: false,
     })
 
-    posts = fetchedPosts.docs
-  } else {
-    if (selectedDocs?.length) {
-      const filteredSelectedPosts = selectedDocs.map((post) => {
-        if (typeof post.value === 'object') return post.value
-      }) as Post[]
-
-      posts = filteredSelectedPosts
-    }
+    articles = fetched.docs
+  } else if (selectedDocs?.length) {
+    articles = selectedDocs
+      .map((ref) => {
+        const v = ref.value
+        return typeof v === 'object' && v !== null ? (v as Article) : null
+      })
+      .filter((doc): doc is Article => Boolean(doc))
   }
 
   return (
@@ -59,7 +45,7 @@ export const ArchiveBlock: React.FC<
           <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
         </div>
       )}
-      <CollectionArchive posts={posts} />
+      <CollectionArchive articles={articles} />
     </div>
   )
 }

@@ -20,18 +20,9 @@ importers:
       '@payloadcms/next':
         specifier: 3.82.1
         version: 3.82.1(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
-      '@payloadcms/plugin-form-builder':
-        specifier: 3.82.1
-        version: 3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
-      '@payloadcms/plugin-nested-docs':
-        specifier: 3.82.1
-        version: 3.82.1(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))
       '@payloadcms/plugin-redirects':
         specifier: 3.82.1
         version: 3.82.1(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))
-      '@payloadcms/plugin-search':
-        specifier: 3.82.1
-        version: 3.82.1(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
       '@payloadcms/plugin-seo':
         specifier: 3.82.1
         version: 3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
@@ -1436,29 +1427,10 @@ packages:
       next: '>=15.2.9 <15.3.0 || >=15.3.9 <15.4.0 || >=15.4.11 <15.5.0 || >=16.2.2 <17.0.0'
       payload: 3.82.1
 
-  '@payloadcms/plugin-form-builder@3.82.1':
-    resolution: {integrity: sha512-uIdGvJayLMRV+kzLmjt1G5YCbs3gFUFpSWyvkzCa/bXDgjwQFw1G0Ujp+3kYS0PPdrmTNcpUpVrnaURNrZdrKQ==}
-    peerDependencies:
-      payload: 3.82.1
-      react: ^19.0.1 || ^19.1.2 || ^19.2.1
-      react-dom: ^19.0.1 || ^19.1.2 || ^19.2.1
-
-  '@payloadcms/plugin-nested-docs@3.82.1':
-    resolution: {integrity: sha512-cQ/hC4TA2JLMFUzEAMGkMy1VwtqxQPv8NidTosEARFe21AHX7WuneFNzZrPBAFDodsYJM+XaD3ofbObG+NxCFA==}
-    peerDependencies:
-      payload: 3.82.1
-
   '@payloadcms/plugin-redirects@3.82.1':
     resolution: {integrity: sha512-izK6enwBwmaTYqWTy8j4d0njv2deqOjlhQtxT92fpyUQBu4q99JPv5JMVd/TWWTQXtcItcM37bOsRgTvXWULCA==}
     peerDependencies:
       payload: 3.82.1
-
-  '@payloadcms/plugin-search@3.82.1':
-    resolution: {integrity: sha512-Mp2WMddac3V015aH/EeSz/5eBCvy/Pll/7SE0gDnPojFTHxs1nI0fJ5Y1K4XML2OrXTqE0KUCXRHQ6cbDGwJRQ==}
-    peerDependencies:
-      payload: 3.82.1
-      react: ^19.0.1 || ^19.1.2 || ^19.2.1
-      react-dom: ^19.0.1 || ^19.1.2 || ^19.2.1
 
   '@payloadcms/plugin-seo@3.82.1':
     resolution: {integrity: sha512-j3Drf4Nxo9EV4KDFvoitsE4ZEMnaglCPXOE/Uyh6nPlp6JbCM3uawVmT+7vydlIDnjrSaCm/uwh66OwRuV9JFg==}
@@ -6152,43 +6124,10 @@ snapshots:
       - supports-color
       - typescript
 
-  '@payloadcms/plugin-form-builder@3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)':
-    dependencies:
-      '@payloadcms/ui': 3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
-      escape-html: 1.0.3
-      payload: 3.82.1(graphql@16.13.2)(typescript@5.7.3)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    transitivePeerDependencies:
-      - '@types/react'
-      - monaco-editor
-      - next
-      - supports-color
-      - typescript
-
-  '@payloadcms/plugin-nested-docs@3.82.1(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))':
-    dependencies:
-      payload: 3.82.1(graphql@16.13.2)(typescript@5.7.3)
-
   '@payloadcms/plugin-redirects@3.82.1(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))':
     dependencies:
       '@payloadcms/translations': 3.82.1
       payload: 3.82.1(graphql@16.13.2)(typescript@5.7.3)
-
-  '@payloadcms/plugin-search@3.82.1(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)':
-    dependencies:
-      '@payloadcms/next': 3.82.1(@types/react@19.2.14)(graphql@16.13.2)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
-      '@payloadcms/ui': 3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)
-      payload: 3.82.1(graphql@16.13.2)(typescript@5.7.3)
-      react: 19.2.4
-      react-dom: 19.2.4(react@19.2.4)
-    transitivePeerDependencies:
-      - '@types/react'
-      - graphql
-      - monaco-editor
-      - next
-      - supports-color
-      - typescript
 
   '@payloadcms/plugin-seo@3.82.1(@types/react@19.2.14)(monaco-editor@0.55.1)(next@16.2.3(@babel/core@7.29.0)(@playwright/test@1.58.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(sass@1.77.4))(payload@3.82.1(graphql@16.13.2)(typescript@5.7.3))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.7.3)':
     dependencies:

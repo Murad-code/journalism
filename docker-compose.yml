@@ -1,31 +1,54 @@
-version: '3'
-
 services:
-  payload:
-    image: node:18-alpine
-    ports:
-      - '3000:3000'
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-payload}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-payload}
+      POSTGRES_DB: ${POSTGRES_DB:-journalism}
     volumes:
-      - .:/home/node/app
-      - node_modules:/home/node/app/node_modules
-    working_dir: /home/node/app/
-    command: sh -c "yarn install && yarn dev"
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U "$$POSTGRES_USER" -d "$$POSTGRES_DB"']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - internal
+
+  app:
+    build: .
+    restart: unless-stopped
     depends_on:
-      - mongo
+      postgres:
+        condition: service_healthy
     env_file:
       - .env
-
-  mongo:
-    image: mongo:latest
-    ports:
-      - '27017:27017'
-    command:
-      - --storageEngine=wiredTiger
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgres://payload:payload@postgres:5432/journalism}
+      NODE_ENV: production
     volumes:
-      - data:/data/db
-    logging:
-      driver: none
+      - media_uploads:/app/public/media
+    expose:
+      - '3000'
+    networks:
+      - internal
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - internal
 
 volumes:
-  data:
-  node_modules:
+  postgres_data:
+  media_uploads:
+
+networks:
+  internal:

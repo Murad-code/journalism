@@ -1,6 +1,8 @@
-# Payload Website Template
+# Journalism portfolio (Payload + Next.js)
 
-This is the official [Payload Website Template](https://github.com/payloadcms/payload/blob/main/templates/website). Use it to power websites, blogs, or portfolios from small to enterprise. This repo includes a fully-working backend, enterprise-grade admin panel, and a beautifully designed, production-ready website.
+PostgreSQL-backed Payload CMS with an **Articles** collection, minimal public UI (`/`, `/articles`, `/articles/[slug]`, optional `/about`), and Docker Compose (**app**, **postgres**, **nginx**). Docker and VPS steps: [docs/docker.md](docs/docker.md).
+
+The sections below still describe the upstream Payload website template patterns where they apply.
 
 This template is right for you if you are working on:
 
@@ -18,7 +20,6 @@ Core features:
 - [Live Preview](#live-preview)
 - [On-demand Revalidation](#on-demand-revalidation)
 - [SEO](#seo)
-- [Search](#search)
 - [Redirects](#redirects)
 - [Jobs and Scheduled Publishing](#jobs-and-scheduled-publish)
 - [Website](#website)

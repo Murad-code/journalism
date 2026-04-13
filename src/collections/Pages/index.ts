@@ -3,9 +3,18 @@ import type { CollectionConfig } from 'payload'
 import { authenticated } from '../../access/authenticated'
 import { authenticatedOrPublished } from '../../access/authenticatedOrPublished'
 import { Archive } from '../../blocks/ArchiveBlock/config'
+import { BreakingNewsBar } from '../../blocks/BreakingNewsBar/config'
 import { CallToAction } from '../../blocks/CallToAction/config'
+import { CategoryFeed } from '../../blocks/CategoryFeed/config'
 import { Content } from '../../blocks/Content/config'
+import { Divider } from '../../blocks/Divider/config'
+import { EmbedBlock } from '../../blocks/EmbedBlock/config'
+import { LatestHeadlines } from '../../blocks/LatestHeadlines/config'
+import { ManualStoryGrid } from '../../blocks/ManualStoryGrid/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { NewsletterSignup } from '../../blocks/NewsletterSignup/config'
+import { PartnerLogoRow } from '../../blocks/PartnerLogoRow/config'
+import { SectionHeader } from '../../blocks/SectionHeader/config'
 import { hero } from '@/heros/config'
 import { slugField } from 'payload'
 import { populatePublishedAt } from '../../hooks/populatePublishedAt'
@@ -71,7 +80,21 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, Content, MediaBlock, Archive],
+              blocks: [
+                Archive,
+                BreakingNewsBar,
+                CallToAction,
+                CategoryFeed,
+                Content,
+                Divider,
+                EmbedBlock,
+                LatestHeadlines,
+                ManualStoryGrid,
+                MediaBlock,
+                NewsletterSignup,
+                PartnerLogoRow,
+                SectionHeader,
+              ],
               required: true,
               admin: {
                 initCollapsed: true,

@@ -12,7 +12,15 @@ export const ArchiveBlock: React.FC<
     id?: string
   }
 > = async (props) => {
-  const { id, introContent, limit: limitFromProps, populateBy, selectedDocs } = props
+  const {
+    id,
+    introContent,
+    layoutVariant = 'uniformGrid',
+    limit: limitFromProps,
+    populateBy,
+    selectedDocs,
+    sort = '-publishedDate',
+  } = props
 
   const limit = limitFromProps || 3
 
@@ -26,6 +34,7 @@ export const ArchiveBlock: React.FC<
       depth: 1,
       limit,
       overrideAccess: false,
+      sort: sort ?? '-publishedDate',
     })
 
     articles = fetched.docs
@@ -39,13 +48,13 @@ export const ArchiveBlock: React.FC<
   }
 
   return (
-    <div className="my-16" id={`block-${id}`}>
+    <div className="archive-block my-16" id={`block-${id}`}>
       {introContent && (
         <div className="container mb-16">
           <RichText className="ms-0 max-w-[48rem]" data={introContent} enableGutter={false} />
         </div>
       )}
-      <CollectionArchive articles={articles} />
+      <CollectionArchive articles={articles} layoutVariant={layoutVariant ?? 'uniformGrid'} />
     </div>
   )
 }

@@ -150,6 +150,15 @@ export const Articles: CollectionConfig<'articles'> = {
         position: 'sidebar',
       },
     },
+    {
+      name: 'categories',
+      type: 'relationship',
+      relationTo: 'categories',
+      hasMany: true,
+      admin: {
+        position: 'sidebar',
+      },
+    },
     slugField(),
   ],
   hooks: {

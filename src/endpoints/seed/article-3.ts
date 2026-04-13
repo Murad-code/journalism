@@ -2,13 +2,15 @@ import { RequiredDataFromCollectionSlug } from 'payload'
 import type { ArticleArgs } from './article-1'
 
 export const article3: (args: ArticleArgs) => RequiredDataFromCollectionSlug<'articles'> = ({
-  featuredImage,
   blockImage,
+  categoryIds,
+  featuredImage,
 }) => {
   return {
     slug: 'dollar-and-sense-the-financial-forecast',
     _status: 'published',
     author: 'Demo Author',
+    ...(categoryIds?.length ? { categories: categoryIds } : {}),
     content: {
       root: {
         type: 'root',

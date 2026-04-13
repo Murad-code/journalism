@@ -2,18 +2,21 @@ import type { Media } from '@/payload-types'
 import { RequiredDataFromCollectionSlug } from 'payload'
 
 export type ArticleArgs = {
-  featuredImage: Media
   blockImage: Media
+  categoryIds?: number[]
+  featuredImage: Media
 }
 
 export const article1: (args: ArticleArgs) => RequiredDataFromCollectionSlug<'articles'> = ({
-  featuredImage,
   blockImage,
+  categoryIds,
+  featuredImage,
 }) => {
   return {
     slug: 'digital-horizons',
     _status: 'published',
     author: 'Demo Author',
+    ...(categoryIds?.length ? { categories: categoryIds } : {}),
     content: {
       root: {
         type: 'root',

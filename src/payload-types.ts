@@ -68,6 +68,7 @@ export interface Config {
   blocks: {};
   collections: {
     pages: Page;
+    categories: Category;
     articles: Article;
     media: Media;
     users: User;
@@ -86,6 +87,7 @@ export interface Config {
   };
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
+    categories: CategoriesSelect<false> | CategoriesSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -193,7 +195,21 @@ export interface Page {
       | null;
     media?: (number | null) | Media;
   };
-  layout: (CallToActionBlock | ContentBlock | MediaBlock | ArchiveBlock)[];
+  layout: (
+    | ArchiveBlock
+    | BreakingNewsBarBlock
+    | CallToActionBlock
+    | CategoryFeedBlock
+    | ContentBlock
+    | DividerBlock
+    | EmbedBlock
+    | LatestHeadlinesBlock
+    | ManualStoryGridBlock
+    | MediaBlock
+    | NewsletterSignupBlock
+    | PartnerLogoRowBlock
+    | SectionHeaderBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -245,6 +261,7 @@ export interface Article {
   };
   publishedDate?: string | null;
   author?: string | null;
+  categories?: (number | Category)[] | null;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
@@ -375,6 +392,83 @@ export interface FolderInterface {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories".
+ */
+export interface Category {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: 'articles' | null;
+  limit?: number | null;
+  sort?: ('-publishedDate' | 'publishedDate' | '-updatedAt') | null;
+  layoutVariant?: ('uniformGrid' | 'leadAndGrid' | 'horizontalRail') | null;
+  selectedDocs?:
+    | {
+        relationTo: 'articles';
+        value: number | Article;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BreakingNewsBarBlock".
+ */
+export interface BreakingNewsBarBlock {
+  message: string;
+  emphasis?: ('info' | 'alert' | 'urgent') | null;
+  showLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null);
+    url?: string | null;
+    label: string;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'breakingNewsBar';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CallToActionBlock".
  */
 export interface CallToActionBlock {
@@ -420,6 +514,34 @@ export interface CallToActionBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CategoryFeedBlock".
+ */
+export interface CategoryFeedBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  category: number | Category;
+  limit?: number | null;
+  sort?: ('-publishedDate' | 'publishedDate' | '-updatedAt') | null;
+  layoutVariant?: ('uniformGrid' | 'leadAndGrid' | 'horizontalRail') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'categoryFeed';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -473,6 +595,82 @@ export interface ContentBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DividerBlock".
+ */
+export interface DividerBlock {
+  label?: string | null;
+  style?: ('subtle' | 'strong') | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'divider';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EmbedBlock".
+ */
+export interface EmbedBlock {
+  /**
+   * YouTube (watch, youtu.be, or embed) or Vimeo page URLs. Other hosts are not embedded.
+   */
+  embedUrl: string;
+  /**
+   * Short label for screen readers (e.g. segment title).
+   */
+  title?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'embedBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LatestHeadlinesBlock".
+ */
+export interface LatestHeadlinesBlock {
+  sectionTitle?: string | null;
+  limit?: number | null;
+  showLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'latestHeadlines';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ManualStoryGridBlock".
+ */
+export interface ManualStoryGridBlock {
+  slots?:
+    | {
+        kicker?: string | null;
+        article: number | Article;
+        span?: ('4' | '6' | '8' | '12') | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'manualStoryGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MediaBlock".
  */
 export interface MediaBlock {
@@ -483,36 +681,66 @@ export interface MediaBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock".
+ * via the `definition` "NewsletterSignupBlock".
  */
-export interface ArchiveBlock {
-  introContent?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  populateBy?: ('collection' | 'selection') | null;
-  relationTo?: 'articles' | null;
-  limit?: number | null;
-  selectedDocs?:
+export interface NewsletterSignupBlock {
+  headline: string;
+  description?: string | null;
+  buttonLabel?: string | null;
+  /**
+   * External newsletter signup page (e.g. Mailchimp, Buttondown, Substack).
+   */
+  formUrl: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletterSignup';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnerLogoRowBlock".
+ */
+export interface PartnerLogoRowBlock {
+  caption?: string | null;
+  logos?:
     | {
-        relationTo: 'articles';
-        value: number | Article;
+        image: number | Media;
+        id?: string | null;
       }[]
     | null;
   id?: string | null;
   blockName?: string | null;
-  blockType: 'archive';
+  blockType: 'partnerLogoRow';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeaderBlock".
+ */
+export interface SectionHeaderBlock {
+  eyebrow?: string | null;
+  title: string;
+  showLink?: boolean | null;
+  link?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'articles';
+          value: number | Article;
+        } | null);
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sectionHeader';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -687,6 +915,10 @@ export interface PayloadLockedDocument {
         value: number | Page;
       } | null)
     | ({
+        relationTo: 'categories';
+        value: number | Category;
+      } | null)
+    | ({
         relationTo: 'articles';
         value: number | Article;
       } | null)
@@ -779,10 +1011,19 @@ export interface PagesSelect<T extends boolean = true> {
   layout?:
     | T
     | {
-        cta?: T | CallToActionBlockSelect<T>;
-        content?: T | ContentBlockSelect<T>;
-        mediaBlock?: T | MediaBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
+        breakingNewsBar?: T | BreakingNewsBarBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        categoryFeed?: T | CategoryFeedBlockSelect<T>;
+        content?: T | ContentBlockSelect<T>;
+        divider?: T | DividerBlockSelect<T>;
+        embedBlock?: T | EmbedBlockSelect<T>;
+        latestHeadlines?: T | LatestHeadlinesBlockSelect<T>;
+        manualStoryGrid?: T | ManualStoryGridBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        newsletterSignup?: T | NewsletterSignupBlockSelect<T>;
+        partnerLogoRow?: T | PartnerLogoRowBlockSelect<T>;
+        sectionHeader?: T | SectionHeaderBlockSelect<T>;
       };
   meta?:
     | T
@@ -797,6 +1038,41 @@ export interface PagesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock_select".
+ */
+export interface ArchiveBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  populateBy?: T;
+  relationTo?: T;
+  limit?: T;
+  sort?: T;
+  layoutVariant?: T;
+  selectedDocs?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BreakingNewsBarBlock_select".
+ */
+export interface BreakingNewsBarBlockSelect<T extends boolean = true> {
+  message?: T;
+  emphasis?: T;
+  showLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+      };
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -819,6 +1095,19 @@ export interface CallToActionBlockSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CategoryFeedBlock_select".
+ */
+export interface CategoryFeedBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  category?: T;
+  limit?: T;
+  sort?: T;
+  layoutVariant?: T;
   id?: T;
   blockName?: T;
 }
@@ -850,6 +1139,63 @@ export interface ContentBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DividerBlock_select".
+ */
+export interface DividerBlockSelect<T extends boolean = true> {
+  label?: T;
+  style?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EmbedBlock_select".
+ */
+export interface EmbedBlockSelect<T extends boolean = true> {
+  embedUrl?: T;
+  title?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LatestHeadlinesBlock_select".
+ */
+export interface LatestHeadlinesBlockSelect<T extends boolean = true> {
+  sectionTitle?: T;
+  limit?: T;
+  showLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ManualStoryGridBlock_select".
+ */
+export interface ManualStoryGridBlockSelect<T extends boolean = true> {
+  slots?:
+    | T
+    | {
+        kicker?: T;
+        article?: T;
+        span?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "MediaBlock_select".
  */
 export interface MediaBlockSelect<T extends boolean = true> {
@@ -859,16 +1205,62 @@ export interface MediaBlockSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "ArchiveBlock_select".
+ * via the `definition` "NewsletterSignupBlock_select".
  */
-export interface ArchiveBlockSelect<T extends boolean = true> {
-  introContent?: T;
-  populateBy?: T;
-  relationTo?: T;
-  limit?: T;
-  selectedDocs?: T;
+export interface NewsletterSignupBlockSelect<T extends boolean = true> {
+  headline?: T;
+  description?: T;
+  buttonLabel?: T;
+  formUrl?: T;
   id?: T;
   blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PartnerLogoRowBlock_select".
+ */
+export interface PartnerLogoRowBlockSelect<T extends boolean = true> {
+  caption?: T;
+  logos?:
+    | T
+    | {
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SectionHeaderBlock_select".
+ */
+export interface SectionHeaderBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  showLink?: T;
+  link?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "categories_select".
+ */
+export interface CategoriesSelect<T extends boolean = true> {
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -887,6 +1279,7 @@ export interface ArticlesSelect<T extends boolean = true> {
       };
   publishedDate?: T;
   author?: T;
+  categories?: T;
   generateSlug?: T;
   slug?: T;
   updatedAt?: T;

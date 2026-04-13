@@ -2,13 +2,15 @@ import { RequiredDataFromCollectionSlug } from 'payload'
 import type { ArticleArgs } from './article-1'
 
 export const article2: (args: ArticleArgs) => RequiredDataFromCollectionSlug<'articles'> = ({
-  featuredImage,
   blockImage,
+  categoryIds,
+  featuredImage,
 }) => {
   return {
     slug: 'global-gaze',
     _status: 'published',
     author: 'Demo Author',
+    ...(categoryIds?.length ? { categories: categoryIds } : {}),
     content: {
       root: {
         type: 'root',

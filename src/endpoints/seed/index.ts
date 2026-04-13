@@ -8,7 +8,7 @@ import { image1 } from './image-1'
 import { image2 } from './image-2'
 import { imageHero1 } from './image-hero-1'
 
-const collections: CollectionSlug[] = ['articles', 'pages', 'media']
+const collectionsToClear: CollectionSlug[] = ['articles', 'pages', 'media', 'categories']
 
 const globals: GlobalSlug[] = ['header', 'footer']
 
@@ -39,12 +39,12 @@ export const seed = async ({
     ),
   )
 
-  await Promise.all(
-    collections.map((collection) => payload.db.deleteMany({ collection, req, where: {} })),
-  )
+  for (const collection of collectionsToClear) {
+    await payload.db.deleteMany({ collection, req, where: {} })
+  }
 
   await Promise.all(
-    collections
+    collectionsToClear
       .filter((collection) => Boolean(payload.collections[collection].config.versions))
       .map((collection) => payload.db.deleteVersions({ collection, req, where: {} })),
   )
@@ -109,6 +109,26 @@ export const seed = async ({
     }),
   ])
 
+  payload.logger.info(`— Seeding categories...`)
+
+  const newsCategory = await payload.create({
+    collection: 'categories',
+    data: {
+      title: 'News',
+      slug: 'news',
+    },
+    req,
+  })
+
+  const opinionCategory = await payload.create({
+    collection: 'categories',
+    data: {
+      title: 'Opinion',
+      slug: 'opinion',
+    },
+    req,
+  })
+
   payload.logger.info(`— Seeding articles...`)
 
   await payload.create({
@@ -117,7 +137,11 @@ export const seed = async ({
     context: {
       disableRevalidate: true,
     },
-    data: article1({ featuredImage: image1Doc, blockImage: image2Doc }),
+    data: article1({
+      blockImage: image2Doc,
+      categoryIds: [newsCategory.id],
+      featuredImage: image1Doc,
+    }),
   })
 
   await payload.create({
@@ -126,7 +150,11 @@ export const seed = async ({
     context: {
       disableRevalidate: true,
     },
-    data: article2({ featuredImage: image2Doc, blockImage: image3Doc }),
+    data: article2({
+      blockImage: image3Doc,
+      categoryIds: [newsCategory.id, opinionCategory.id],
+      featuredImage: image2Doc,
+    }),
   })
 
   await payload.create({
@@ -135,7 +163,11 @@ export const seed = async ({
     context: {
       disableRevalidate: true,
     },
-    data: article3({ featuredImage: image3Doc, blockImage: image1Doc }),
+    data: article3({
+      blockImage: image1Doc,
+      categoryIds: [opinionCategory.id],
+      featuredImage: image3Doc,
+    }),
   })
 
   payload.logger.info(`— Seeding pages...`)

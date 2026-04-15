@@ -1,5 +1,11 @@
 # To use this Dockerfile, you have to set `output: 'standalone'` in your next.config.js file.
 # From https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
+#
+# Build needs a Postgres that already has Payload migrations applied (next build queries the DB).
+# Start compose Postgres, run `pnpm payload migrate` against 127.0.0.1:${POSTGRES_HOST_PORT:-5433}, then build.
+# If `docker compose build` fails (BuildKit + network: service:postgres unsupported), use:
+#   DOCKER_BUILDKIT=0 docker build --network=container:$(docker compose ps -q postgres) \
+#     --build-arg DATABASE_URL=postgres://USER:PASS@127.0.0.1:5432/DB ...
 
 FROM node:22.17.0-alpine AS base
 
@@ -25,6 +31,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+# Next build runs Payload/DB during SSG (generateStaticParams). Pass DATABASE_URL
+# (e.g. docker compose build with build.network: service:postgres → use 127.0.0.1).
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
+ARG PAYLOAD_SECRET=docker-build-only-placeholder-not-used-at-runtime-min-32chars
+ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
+ARG NEXT_PUBLIC_SERVER_URL=http://localhost
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
@@ -41,7 +56,7 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -67,7 +82,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output

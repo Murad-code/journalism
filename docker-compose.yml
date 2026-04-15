@@ -13,11 +13,21 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    # Host port for local CLI (migrate / next build) — not required for in-compose app → postgres traffic.
+    ports:
+      - '127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432'
     networks:
       - internal
 
   app:
-    build: .
+    build:
+      context: .
+      # Build shares Postgres' network namespace so 127.0.0.1:5432 reaches the DB.
+      # Start Postgres first: `docker compose up -d postgres`, then `docker compose build app`.
+      network: service:postgres
+      args:
+        # Build runs in Postgres’ network: DB is always 127.0.0.1 (must match POSTGRES_*).
+        DATABASE_URL: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@127.0.0.1:5432/${POSTGRES_DB:-journalism}
     restart: unless-stopped
     depends_on:
       postgres:

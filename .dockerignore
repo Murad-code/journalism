@@ -1,0 +1,59 @@
+# Dependencies (installed in the image deps stage)
+node_modules
+.pnpm-store
+
+# Next.js
+.next
+out
+.vercel
+
+# TypeScript / misc build output
+*.tsbuildinfo
+dist
+build
+
+# Secrets and local env (pass vars via compose / build-args instead)
+.env
+.env.*
+
+# Git and editor / AI tooling
+.git
+.github
+.cursor
+.idea
+.vscode
+
+# Tests, reports, coverage (not needed for production image)
+coverage
+.nyc_output
+test-results
+playwright-report
+blob-report
+playwright/.cache
+playwright/.auth
+
+# Docker metadata (invalidates cache; not needed inside the image context)
+docker-compose*.yml
+compose*.yaml
+compose*.yml
+
+# Docs and changelogs (not used by `next build`)
+docs
+*.md
+
+# User-generated uploads (mounted as a volume at runtime)
+public/media
+
+# Generated SEO files from local runs
+public/robots.txt
+public/sitemap*.xml
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*

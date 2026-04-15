@@ -223,6 +223,8 @@ Alternatively, you can use [Docker](https://www.docker.com) to spin up this temp
 
 That's it! The Docker instance will help you get up and running quickly while also standardizing the development environment across your teams.
 
+To build a production image, run migrations against Compose Postgres, and push to Docker Hub, see [DOCKER.md](./DOCKER.md).
+
 ### Seed
 
 To seed the database with a few pages, posts, and projects you can click the 'seed database' link from the admin panel.

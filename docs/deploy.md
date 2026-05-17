@@ -1,12 +1,12 @@
 # Deploying to production
 
-Quick reference for pushing changes to the live VPS. For first-time VPS setup, see [docker.md](docker.md) and [production.md](production.md).
+Quick reference for pushing changes to the live VPS. For first-time VPS setup (Docker install, SSL, firewall), see [vps-setup.md](vps-setup.md).
 
 ## Stack at a glance
 
 | What | Where |
 |---|---|
-| VPS | `77.68.54.239`, deploy dir `/root/app/` |
+| VPS | `YOUR_VPS_IP`, deploy dir `/root/app/` |
 | Live URL | `https://sadiasinsights.co.uk` |
 | Docker image | `muradkamali/journalism:1.0.0` (linux/amd64) |
 | Compose file on VPS | `/root/app/docker-compose.yml` |
@@ -27,7 +27,7 @@ Use this when you edited components, styles, content logic, or anything that doe
 scripts/docker-build-amd64.sh --push
 
 # 3. SSH into VPS
-ssh root@77.68.54.239
+ssh root@YOUR_VPS_IP
 
 # 4. Pull and restart (postgres stays up — no downtime gap)
 cd /root/app
@@ -88,7 +88,7 @@ docker compose restart postgres
 **Terminal 1 — open tunnel (leave running):**
 
 ```bash
-ssh -L 15432:127.0.0.1:5433 root@77.68.54.239 -N
+ssh -L 15432:127.0.0.1:5433 root@YOUR_VPS_IP -N
 ```
 
 **Terminal 2 — run the migration:**
@@ -122,11 +122,11 @@ docker compose logs -f app --tail=30
 If you change [`docker-compose.registry.yml`](../docker-compose.registry.yml) or [`nginx/default.conf`](../nginx/default.conf) in this repo, copy them to the VPS:
 
 ```bash
-scp docker-compose.registry.yml root@77.68.54.239:/root/app/docker-compose.yml
-scp nginx/default.conf root@77.68.54.239:/root/app/nginx/default.conf
+scp docker-compose.registry.yml root@YOUR_VPS_IP:/root/app/docker-compose.yml
+scp nginx/default.conf root@YOUR_VPS_IP:/root/app/nginx/default.conf
 
 # Reload nginx config without downtime (if only nginx/default.conf changed)
-ssh root@77.68.54.239 "docker compose -C /root/app exec nginx nginx -s reload"
+ssh root@YOUR_VPS_IP "docker compose -C /root/app exec nginx nginx -s reload"
 ```
 
 ---
@@ -134,7 +134,7 @@ ssh root@77.68.54.239 "docker compose -C /root/app exec nginx nginx -s reload"
 ## Checking the live site
 
 ```bash
-ssh root@77.68.54.239
+ssh root@YOUR_VPS_IP
 
 # Service status
 docker compose ps

@@ -9,9 +9,10 @@ This folder contains all operational and reference documentation. See the root [
 | File | Purpose |
 |---|---|
 | [docs/README.md](README.md) | This index |
+| [docs/vps-setup.md](vps-setup.md) | **First-time VPS setup** — provision Ubuntu, install Docker, issue SSL cert, create deploy dir |
 | [docs/docker.md](docker.md) | **Build workflow** — how to build the linux/amd64 image and push it to the registry |
 | [docs/deploy.md](deploy.md) | **Deployment cookbook** — how to ship a change to the live VPS (code-only or schema change) |
-| [docs/production.md](production.md) | **Live state tracker** — VPS details, what is running, remaining action items |
+| docs/production.md | **Live state tracker** — VPS IP, running image, cert expiry, remaining action items. Gitignored (contains real IP); lives on your local machine only |
 
 ---
 

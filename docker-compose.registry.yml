@@ -1,4 +1,12 @@
-# Local image build: default file. Pre-built image on a VPS: use docker-compose.registry.yml.
+# Production: pull a pre-built linux/amd64 image from a registry and run it.
+#
+# On the VPS, from the deploy directory (needs ./nginx/ and a .env file):
+#   docker compose -f docker-compose.registry.yml pull
+#   docker compose -f docker-compose.registry.yml up -d
+#
+# First-time deploy: run migrations before `up -d` — see DEPLOY.md.
+# DOCKER_IMAGE must be set in .env or exported in the shell.
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -14,21 +22,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    # Host port for local CLI (migrate / next build) — not required for in-compose app → postgres traffic.
-    ports:
-      - '127.0.0.1:${POSTGRES_HOST_PORT:-5433}:5432'
     networks:
       - internal
 
   app:
-    build:
-      context: .
-      # Build shares Postgres' network namespace so 127.0.0.1:5432 reaches the DB.
-      # Start Postgres first: `docker compose up -d postgres`, then `docker compose build app`.
-      network: service:postgres
-      args:
-        # Build runs in Postgres’ network: DB is always 127.0.0.1 (must match POSTGRES_*).
-        DATABASE_URL: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@127.0.0.1:5432/${POSTGRES_DB:-journalism}
+    image: ${DOCKER_IMAGE}
+    platform: linux/amd64
     restart: unless-stopped
     depends_on:
       postgres:
@@ -36,9 +35,10 @@ services:
     env_file:
       - .env
     environment:
-      # Always use the compose service hostname; do not inherit host-only DATABASE_URL from .env.
+      # Overrides any DATABASE_URL in .env — always uses the internal service name.
       DATABASE_URL: postgres://${POSTGRES_USER:-payload}:${POSTGRES_PASSWORD:-payload}@postgres:5432/${POSTGRES_DB:-journalism}
       NODE_ENV: production
+      NEXT_PUBLIC_SERVER_URL: https://sadiasinsights.co.uk
     volumes:
       - media_uploads:/app/public/media
     expose:
@@ -53,8 +53,10 @@ services:
       - app
     ports:
       - '80:80'
+      - '443:443'
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - internal
 

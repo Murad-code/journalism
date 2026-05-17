@@ -1,6 +1,6 @@
 # Journalism portfolio (Payload + Next.js)
 
-PostgreSQL-backed Payload CMS with an **Articles** collection, minimal public UI (`/`, `/articles`, `/articles/[slug]`, optional `/about`), and Docker Compose (**app**, **postgres**, **nginx**). Docker and VPS steps: [docs/docker.md](docs/docker.md).
+PostgreSQL-backed Payload CMS with an **Articles** collection, minimal public UI (`/`, `/articles`, `/articles/[slug]`, optional `/about`), and Docker Compose (**app**, **postgres**, **nginx**). See [docs/](docs/) for deployment guides, build instructions, and a full codebase map.
 
 The sections below still describe the upstream Payload website template patterns where they apply.
 

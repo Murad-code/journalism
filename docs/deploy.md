@@ -1,6 +1,6 @@
 # Deploying to production
 
-Quick reference for pushing changes to the live VPS. For first-time VPS setup, see [DOCKER.md](DOCKER.md) and [PRODUCTION.md](PRODUCTION.md).
+Quick reference for pushing changes to the live VPS. For first-time VPS setup, see [docker.md](docker.md) and [production.md](production.md).
 
 ## Stack at a glance
 
@@ -71,19 +71,24 @@ scripts/docker-build-amd64.sh --push
 
 The standalone Docker image does not include the Payload CLI, so migrations run from your local machine through an SSH tunnel to the VPS Postgres.
 
+**On the VPS** — temporarily add a host port to postgres in `/root/app/docker-compose.yml`:
+
+```yaml
+# Add under the postgres service:
+ports:
+  - '127.0.0.1:5433:5432'
+```
+
+Then restart postgres:
+
+```bash
+docker compose restart postgres
+```
+
 **Terminal 1 — open tunnel (leave running):**
 
 ```bash
 ssh -L 15432:127.0.0.1:5433 root@77.68.54.239 -N
-```
-
-But first, Postgres needs a host port exposed. SSH into the VPS and temporarily add it:
-
-```bash
-# On VPS — add ports block under postgres in /root/app/docker-compose.yml:
-#   ports:
-#     - '127.0.0.1:5433:5432'
-docker compose restart postgres
 ```
 
 **Terminal 2 — run the migration:**
@@ -96,7 +101,7 @@ DATABASE_URL=postgres://payload:payload@127.0.0.1:15432/journalism pnpm payload 
 **On VPS — remove the temp port and restart postgres cleanly:**
 
 ```bash
-# Remove the ports block you added, then:
+# Remove the ports block from docker-compose.yml, then:
 docker compose restart postgres
 ```
 
@@ -114,7 +119,7 @@ docker compose logs -f app --tail=30
 
 ## Updating the VPS deploy files
 
-If you change `docker-compose.registry.yml` or `nginx/default.conf` in this repo, copy them to the VPS:
+If you change [`docker-compose.registry.yml`](../docker-compose.registry.yml) or [`nginx/default.conf`](../nginx/default.conf) in this repo, copy them to the VPS:
 
 ```bash
 scp docker-compose.registry.yml root@77.68.54.239:/root/app/docker-compose.yml
@@ -200,5 +205,6 @@ docker run --rm -v app_media_uploads:/data -v ~/backups:/backup alpine \
 Set up automated daily backups (run once on VPS):
 
 ```bash
+mkdir -p ~/backups
 (crontab -l 2>/dev/null; echo "0 3 * * * docker compose -f /root/app/docker-compose.yml exec -T postgres pg_dump -U payload journalism | gzip > /root/backups/journalism_\$(date +\%Y\%m\%d).sql.gz && find /root/backups -name 'journalism_*.sql.gz' -mtime +14 -delete") | crontab -
 ```
